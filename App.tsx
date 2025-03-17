@@ -64,9 +64,9 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <View style={backgroundStyle}>
       <SearchBar/>
-    </SafeAreaView>
+    </View>
   );
 }
 

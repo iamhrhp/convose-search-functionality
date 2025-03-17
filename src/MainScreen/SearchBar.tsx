@@ -27,7 +27,23 @@ const SearchBar = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+  
   useEffect(() => {
     loadSearchHistory();
   }, []);
@@ -73,11 +89,19 @@ const SearchBar = () => {
     }
   };
 
-  const handleSearch = (searchText:string) => {
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      fetchSuggestions(query, 0);
+    }, 500); 
+  
+    return () => clearTimeout(delayDebounce);
+  }, [query]);
+  
+
+  const handleSearch = (searchText: string) => {
     setQuery(searchText);
-    setSuggestions([]); 
-    setHasMore(true); 
-    fetchSuggestions(searchText, 0); 
+    setSuggestions([]); s
+    setHasMore(true);
   };
 
   const handleSelect = (selectedItem:any) => {
@@ -125,7 +149,7 @@ const SearchBar = () => {
     <KeyboardAvoidingView
       style={styles.keyBoardStyle}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 :( keyboardVisible?40:0)}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.wrapper}>
