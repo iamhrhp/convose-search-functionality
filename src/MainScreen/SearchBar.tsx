@@ -100,7 +100,7 @@ const SearchBar = () => {
 
   const handleSearch = (searchText: string) => {
     setQuery(searchText);
-    setSuggestions([]); s
+    setSuggestions([]);
     setHasMore(true);
   };
 
